@@ -4,7 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "InputActionValue.h"
+
 #include "PlayerBase.generated.h"
+
+class UInputAction;
 
 UCLASS()
 class PROJECT_BRAWLSTARS_API APlayerBase : public ACharacter
@@ -26,4 +30,10 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+public:
+	void Move(const FInputActionValue& Value);
+
+public:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input")
+	TObjectPtr<UInputAction> IA_Move;
 };

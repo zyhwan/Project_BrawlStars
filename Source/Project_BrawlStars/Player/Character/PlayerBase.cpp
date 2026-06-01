@@ -2,6 +2,9 @@
 
 
 #include "PlayerBase.h"
+#include "EnhancedInputComponent.h"
+#include "Kismet/KismetMathLibrary.h"
+
 
 // Sets default values
 APlayerBase::APlayerBase()
@@ -30,5 +33,27 @@ void APlayerBase::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+	UEnhancedInputComponent* UIC = Cast<UEnhancedInputComponent>(PlayerInputComponent);
+
+	if (UIC)
+	{
+		UIC->BindAction(IA_Move, ETriggerEvent::Triggered, this, &APlayerBase::Move);
+	}
+
+
+}
+
+void APlayerBase::Move(const FInputActionValue& Value)
+{
+	FVector2D Direction = Value.Get<FVector2D>();
+
+	FRotator CameraRotation = GetControlRotation();
+	FRotator CameraRotationInFloor = FRotator(0.f, CameraRotation.Yaw, 0.f);
+
+	FVector CameraForwardInFloor = UKismetMathLibrary::GetForwardVector(CameraRotationInFloor);
+	FVector CameraRightInFloor = UKismetMathLibrary::GetRightVector(CameraRotationInFloor);
+
+	AddMovementInput(CameraForwardInFloor * Direction.X);
+	AddMovementInput(CameraRightInFloor * Direction.Y);
 }
 
