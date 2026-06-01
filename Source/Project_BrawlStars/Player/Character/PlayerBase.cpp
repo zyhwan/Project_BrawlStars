@@ -4,7 +4,7 @@
 #include "PlayerBase.h"
 #include "EnhancedInputComponent.h"
 #include "Kismet/KismetMathLibrary.h"
-
+#include "GameFramework/PlayerController.h"
 
 // Sets default values
 APlayerBase::APlayerBase()
@@ -21,10 +21,17 @@ void APlayerBase::BeginPlay()
 	
 }
 
+void APlayerBase::UpdateRotationToMouseCursor()
+{
+
+
+}
+
 // Called every frame
 void APlayerBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	UpdateRotationToMouseCursor();
 
 }
 
@@ -47,13 +54,9 @@ void APlayerBase::Move(const FInputActionValue& Value)
 {
 	FVector2D Direction = Value.Get<FVector2D>();
 
-	FRotator CameraRotation = GetControlRotation();
-	FRotator CameraRotationInFloor = FRotator(0.f, CameraRotation.Yaw, 0.f);
-
-	FVector CameraForwardInFloor = UKismetMathLibrary::GetForwardVector(CameraRotationInFloor);
-	FVector CameraRightInFloor = UKismetMathLibrary::GetRightVector(CameraRotationInFloor);
-
-	AddMovementInput(CameraForwardInFloor * Direction.X);
-	AddMovementInput(CameraRightInFloor * Direction.Y);
+	// 카메라 기준이 아닌 월드 기준 고정 방향으로 변경
+	// 쿼터뷰는 카메라가 고정이라 월드 기준이 더 자연스러움
+	AddMovementInput(FVector::ForwardVector, Direction.X);
+	AddMovementInput(FVector::RightVector, Direction.Y);
 }
 

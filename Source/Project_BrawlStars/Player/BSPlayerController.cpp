@@ -2,18 +2,45 @@
 
 
 #include "BSPlayerController.h"
+#include "Character/PlayerBase.h"
+
 #include "EnhancedInputSubsystems.h"
 #include "InputMappingContext.h"
+#include "Kismet/KismetMathLibrary.h"
 
-
-ABSPlayerController::ABSPlayerController()
+void ABSPlayerController::PlayerTick(float DeltaTime)
 {
+    Super::PlayerTick(DeltaTime);
+    UpdateCharacterRotation();
 }
 
-void ABSPlayerController::OnPossess(APawn* aPawn)
+void ABSPlayerController::UpdateCharacterRotation()
 {
-    Super::OnPossess(aPawn);
+    // 빙의된 캐릭터 가져오기
+    APlayerBase* MyCharacter = Cast<APlayerBase>(GetPawn());
+    if (!MyCharacter) return;
 
+    // 커서가 가리키는 월드 좌표
+    FHitResult HitResult;
+    GetHitResultUnderCursor(ECC_Visibility, false, HitResult);
+
+    if (HitResult.bBlockingHit)
+    {
+        FVector TargetLocation = HitResult.Location;
+        FVector MyLocation = MyCharacter->GetActorLocation();
+        TargetLocation.Z = MyLocation.Z;
+
+        FVector Direction = (TargetLocation - MyLocation).GetSafeNormal();
+        FRotator NewRotation = FRotator(0.f, UKismetMathLibrary::MakeRotFromX(Direction).Yaw, 0.f);
+
+        // 컨트롤러 회전값 설정
+        SetControlRotation(NewRotation);
+    }
+}
+
+void ABSPlayerController::BeginPlay()
+{
+    SetShowMouseCursor(true);
     if (IsLocalPlayerController())
     {
 
@@ -25,6 +52,15 @@ void ABSPlayerController::OnPossess(APawn* aPawn)
             Subsystem->AddMappingContext(IMC_Input, 0);
         }
     }
+}
+
+ABSPlayerController::ABSPlayerController()
+{
+}
+
+void ABSPlayerController::OnPossess(APawn* aPawn)
+{
+    Super::OnPossess(aPawn);
 }
 
 void ABSPlayerController::OnUnPossess()

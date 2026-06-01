@@ -15,13 +15,20 @@ UCLASS()
 class PROJECT_BRAWLSTARS_API ABSPlayerController : public APlayerController
 {
 	GENERATED_BODY()
+protected:
+	virtual void PlayerTick(float DeltaTime) override;
+
+private:
+	void UpdateCharacterRotation();
+
 public:
+	virtual void BeginPlay() override;
 	ABSPlayerController();
 
 	virtual void OnPossess(APawn* aPawn) override;
 	virtual void OnUnPossess() override;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "EnhancedInput")
-	UInputMappingContext* IMC_Input;
+	TObjectPtr<UInputMappingContext> IMC_Input;
 
 };
