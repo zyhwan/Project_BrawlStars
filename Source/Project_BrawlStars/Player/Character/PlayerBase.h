@@ -10,6 +10,9 @@
 
 class UInputAction;
 
+class UStatComponent; //Á¤ÀÇÇÑ ½ºÅÝ ÄÄÆ÷³ÍÆ®.
+
+
 UCLASS()
 class PROJECT_BRAWLSTARS_API APlayerBase : public ACharacter
 {
@@ -36,6 +39,10 @@ public:
 	void Move(const FInputActionValue& Value);
 
 public:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Component")
+	TObjectPtr<UStatComponent> StatComponent;
+	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input")
 	TObjectPtr<UInputAction> IA_Move;
+	
 };

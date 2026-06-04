@@ -2,6 +2,8 @@
 
 
 #include "PlayerBase.h"
+#include "Project_BrawlStars/Player/Stat/StatComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "EnhancedInputComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "GameFramework/PlayerController.h"
@@ -11,6 +13,8 @@ APlayerBase::APlayerBase()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+	// ½ºÅÈ ÄÄÆ÷³ÍÆ® »ý¼º
+	StatComponent = CreateDefaultSubobject<UStatComponent>(TEXT("StatComponent"));
 
 }
 
@@ -19,6 +23,11 @@ void APlayerBase::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	if (StatComponent)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Speed: %f"), StatComponent->GetSpeed());
+		GetCharacterMovement()->MaxWalkSpeed = StatComponent->GetSpeed();
+	}
 }
 
 void APlayerBase::UpdateRotationToMouseCursor()
