@@ -61,3 +61,18 @@ const float UStatComponent::GetSpeed() const
 {
 	return Speed;
 }
+
+const int32 UStatComponent::GetMaxAmmo() const
+{
+    return MaxAmmo;
+}
+
+const int32 UStatComponent::GetCurrentAmmo() const
+{
+    return CurrentAmmo;
+}
+
+const float UStatComponent::GetAttackDamage() const
+{
+    return AttackDamage;
+}

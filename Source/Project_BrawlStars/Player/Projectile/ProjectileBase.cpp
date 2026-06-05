@@ -27,21 +27,22 @@ AProjectileBase::AProjectileBase()
 
     // 투사체 이동
     ProjectileMovement = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileMovement"));
-    ProjectileMovement->InitialSpeed = 2000.f;
-    ProjectileMovement->MaxSpeed = 2000.f;
+    ProjectileMovement->InitialSpeed = 3000.f;
+    ProjectileMovement->MaxSpeed = 3000.f;
     ProjectileMovement->bRotationFollowsVelocity = true;
     ProjectileMovement->bShouldBounce = false;
     ProjectileMovement->ProjectileGravityScale = 0.f; // 탑뷰라 중력 없음
 
     // 일정 시간 후 자동 소멸
     InitialLifeSpan = 3.f;
+
 }
 
 // Called when the game starts or when spawned
 void AProjectileBase::BeginPlay()
 {
 	Super::BeginPlay();
-	
+    SetLifeSpan(InitialLifeSpan);
 }
 
 void AProjectileBase::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
@@ -63,6 +64,12 @@ void AProjectileBase::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UP
 void AProjectileBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+}
+
+void AProjectileBase::SetLifeSpan(float InLifespan)
+{
+    Super::SetLifeSpan(InLifespan);
 
 }
 

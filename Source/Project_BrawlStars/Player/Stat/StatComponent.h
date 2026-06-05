@@ -62,6 +62,9 @@ protected:
 public:
 	const float GetSpeed() const;
 
+	const int32 GetMaxAmmo() const;
+	const int32 GetCurrentAmmo() const;
+	const float GetAttackDamage() const;
 
 public:	
 	// Called every frame

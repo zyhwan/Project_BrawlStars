@@ -30,11 +30,12 @@ protected:
 		UPrimitiveComponent* OtherComp, FVector NormalImpulse,
 		const FHitResult& Hit);
 
-
-public:	
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+	virtual void SetLifeSpan(float InLifespan) override;
 
+public:	
 	// 루트 콜리전
 	UPROPERTY(VisibleAnywhere, Category = "Component")
 	TObjectPtr<USphereComponent> CollisionComponent;

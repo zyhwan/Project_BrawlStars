@@ -4,6 +4,9 @@
 #include "PlayerBase.h"
 #include "Project_BrawlStars/Player/Stat/StatComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "GameFramework/SpringArmComponent.h"
+#include "Camera/CameraComponent.h"
+
 #include "EnhancedInputComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "GameFramework/PlayerController.h"
@@ -16,6 +19,20 @@ APlayerBase::APlayerBase()
 	// 스탯 컴포넌트 생성
 	StatComponent = CreateDefaultSubobject<UStatComponent>(TEXT("StatComponent"));
 
+	//SpringArm
+	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
+	SpringArm->SetupAttachment(RootComponent);
+	SpringArm->bUsePawnControlRotation = false;
+	SpringArm->bDoCollisionTest = false;
+	SpringArm->TargetArmLength = 1600.f;
+	SpringArm->bEnableCameraLag = true;
+	SpringArm->CameraLagSpeed = 3.0f;
+	SpringArm->SetWorldRotation(FRotator(-50.f, 0.f, 0.f)); // Absolute Rotation
+	// Camera
+	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
+	Camera->SetupAttachment(SpringArm);
+	Camera->bUsePawnControlRotation = false;
+	Camera->FieldOfView = 55.f;
 }
 
 // Called when the game starts or when spawned
@@ -30,17 +47,10 @@ void APlayerBase::BeginPlay()
 	}
 }
 
-void APlayerBase::UpdateRotationToMouseCursor()
-{
-
-
-}
-
 // Called every frame
 void APlayerBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	UpdateRotationToMouseCursor();
 
 }
 
@@ -54,6 +64,8 @@ void APlayerBase::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 	if (UIC)
 	{
 		UIC->BindAction(IA_Move, ETriggerEvent::Triggered, this, &APlayerBase::Move);
+		UIC->BindAction(IA_Fire, ETriggerEvent::Triggered, this, &APlayerBase::Fire);
+		UIC->BindAction(IA_Aim, ETriggerEvent::Triggered, this, &APlayerBase::Aim);
 	}
 
 
@@ -67,5 +79,15 @@ void APlayerBase::Move(const FInputActionValue& Value)
 	// 쿼터뷰는 카메라가 고정이라 월드 기준이 더 자연스러움
 	AddMovementInput(FVector::ForwardVector, Direction.X);
 	AddMovementInput(FVector::RightVector, Direction.Y);
+}
+
+void APlayerBase::Fire(const FInputActionValue& Value)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Clicked Fire!!"));
+}
+
+void APlayerBase::Aim(const FInputActionValue& Value)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Clicked Aim!!"));
 }
 
